@@ -1,0 +1,369 @@
+/* CSS Reset */
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html{
+  font-family: 'Open-Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Utility Classes */
+
+.text-wrapper{
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.app-wrapper{
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.flexbox-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 2 auto;
+}
+
+.grid-10-col{
+  grid-column-start: 2;
+  grid-column-end: 12;
+}
+
+/* SCSS Variables */
+
+// color pallete https://coolors.co/palette/463f3a-8a817c-bcb8b1-f4f3ee-e0afa0
+$color-accent-500: #bcb8b1;
+
+$color-main-500: #f4f3ee;
+$color-main-400: #463f3a;
+$color-main-300: #8a817c;
+
+$to-do-item-completion-animation-time: 1s;
+$to-do-item-deletion-desktop-animation-time: 1.2s;
+$to-do-item-deletion-mobile-animation-time: 1s;
+
+
+/* General Styling */
+
+body{
+  background-color: $color-main-500;
+}
+
+h1{
+  text-align: center;
+  color: $color-main-300;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+}
+
+button{
+  margin-bottom: 1rem;
+  padding: .6rem;
+  
+  color: $color-main-500;
+  background-color: $color-accent-500;
+  cursor: pointer;
+}
+
+button:hover{
+  background-color: green;
+  cursor: pointer;
+}
+
+.welcome-message{
+  position: absolute;
+  width: 85vw;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  background-color: $color-main-300;
+  border: 10px solid $color-main-400;
+  color: $color-main-500;
+  font-size: 1.2rem;
+
+  padding: 2.5rem 2rem;
+
+  flex-direction: column;
+  
+  z-index: 100;
+
+  h2{
+    font-weight: 600;
+    margin-bottom: .5rem;
+  }
+
+  h3{
+    font-weight: 600;
+    text-align: center;
+  }
+
+  p, ul{
+    margin-bottom: 1.5rem;
+  }
+
+  .close-button{
+    position: absolute;
+
+    width: 3rem;
+    // padding: 1rem;
+    aspect-ratio: 1;
+    border-radius: 100%;
+    border: 1px solid $color-main-500;
+    background-color: $color-main-400;
+    
+    .close-button__icon{
+      color: $color-main-500
+    }
+  }
+}
+
+.welcome-message--display-hidden{
+  display: none;
+}
+
+.form-section{
+  height: 40px;
+
+  form{
+    flex: 1;
+    height: 100%;
+
+    input[type="text"]{
+      border: none;
+      width: 100%;
+      height: 100%;
+
+      padding: .5rem;
+
+      border: 2px solid $color-main-300;
+      background-color: $color-main-500;
+    }
+  }
+
+  input[type = "submit"]{
+    height: 100%;
+    cursor: pointer;
+    aspect-ratio: 1;
+    
+    // color: #000;
+    color: #ffffff;
+    background-color: $color-main-300;
+    border: 1px solid $color-main-500;
+    
+    text-decoration: none;
+    
+    margin: 0;
+  }
+}
+
+
+.to-do-container{
+  flex-direction: column;
+  position: relative;
+
+  .to-do-item{
+    width: 100%;
+    position: relative;
+
+    .fa-circle-check{
+      position: absolute;
+      left: 0;
+      transform: translateX(-90%);
+      padding: 1rem;
+      cursor: pointer;
+
+      color: $color-main-300;
+    }
+
+    .fa-circle-check--display-hidden{
+      display: none;
+    }
+
+    .to-do-item__body{
+      margin-top: .2rem;
+      background-color: $color-accent-500;
+      flex-grow: 1;
+    
+      position: relative;
+    
+      padding: 1em 2.5em;
+
+      flex-wrap: wrap;
+
+      p{
+        word-break: break-all;
+        text-align: center;
+        color: #FFF;
+      }
+    }
+
+    .fa-xmark{
+      position: absolute;
+      top: 50%;
+      right: 0;
+      // background-color: pink;
+      transform: translateY(-50%);
+      padding: 1rem;
+      color: #ffffff;
+      cursor: pointer;
+
+    }
+  }
+  
+  .to-do-item--display-first-appear{
+    animation: todo-item-first-appear 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+
+  .to-do-item--status-is-dragged{
+    opacity: .1;
+  }
+
+  .todo-item__animation-prop{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: 2px;
+    width: 0px;
+    background-color: $color-main-500;
+
+    z-index: 2;
+  }
+
+  .todo-item__edit-input-form{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    resize: none;
+    outline: none;
+
+    z-index: 2;
+  }
+}
+
+/* Animations */
+
+/* Completion animations should be used in pairs,
+   Deletion animations are used by themselves
+   depending on viewport witdth. (JS)*/
+
+  .todo-item--status-completed{
+  animation: todo-item-completed-item-element;
+  animation-duration: $to-do-item-completion-animation-time;
+  animation-fill-mode: forwards;
+  }
+
+  .todo-item__animation-prop-status-completed{
+    animation: todo-item-completed-animation-prop;
+    animation-duration: $to-do-item-completion-animation-time;
+    animation-fill-mode: forwards;
+  }
+
+  .todo-item--status-completed-rewind{
+    animation: todo-item-completed-item-element-rewind;
+    animation-duration: $to-do-item-completion-animation-time;
+    }
+  
+    .todo-item__animation-prop-status-completed-rewind{
+      animation: todo-item-completed-animation-prop-rewind;
+      animation-duration: $to-do-item-completion-animation-time;
+    }
+
+  .todo-item--status-deleted-desktop{
+    animation: todo-item-deletion-desktop;
+    animation-duration: $to-do-item-deletion-desktop-animation-time;
+  }
+
+  .todo-item--status-deleted-mobile{
+    animation: todo-item-deletion-mobile;
+    animation-duration: $to-do-item-deletion-mobile-animation-time;
+  }
+
+@keyframes todo-item-deletion-desktop {
+  /* Add this animation to to-do-item class */
+  0%{
+
+  }
+  50% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, -300%);
+    opacity: 0;
+  }
+}
+
+@keyframes todo-item-deletion-mobile {
+  /* Add this animation to to-do-item class */
+  100% {
+    transform: translate(200%);
+    opacity: 0;
+  }
+}
+
+@keyframes todo-item-completed-animation-prop {
+  100% {
+    /* The values are gotten from calculating
+    the padding of the to-do-item + adding a width of "x"
+    icon. I also added a couple of pixels for some margin
+    
+    The purpose is that the line doesn't touch the "x* on
+    any device */
+    width: calc(100% - 32px);
+  }
+}
+
+@keyframes todo-item-completed-item-element {
+  /* Add this animation to to-do-item class */
+  100% {
+    opacity: .2;
+  }
+}
+
+@keyframes todo-item-completed-animation-prop-rewind {
+  0%{
+    width: calc(100% - 32px);
+  }
+
+  100%{
+    width: 0;
+  }
+}
+
+@keyframes todo-item-completed-item-element-rewind {
+  /* Add this animation to to-do-item class */
+  0% {
+    opacity: .2;
+  }
+
+  100%{
+    opacity: 1;
+  }
+}
+
+@keyframes todo-item-first-appear{
+  0%{
+    opacity: .4;
+  }
+
+  100%{
+    opacity: 1;
+  }
+}
+

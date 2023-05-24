@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>To-do List</title>
+</head>
+<body>
+
+  <h1>To-do List</h1>
+  <div class="flexbox-container">
+    <button id="welcome">What can this list do?</button>
+  </div>
+  <div class="welcome-message welcome-message--display-hidden | flexbox-container text-wrapper">
+    <h2>What can you do with this list?</h2>
+    <ul>
+      <li>Add or remove elements using website UI</li>
+      <li>Edit element contents by double clicking the text</li>
+      <li>Drag elements around with mouse</li>
+      <li>Mark items as complete by clicking on the checkmark near an element</li>
+      <li>You can refresh the page, close your browser, or even restart your device - your list will stay intact, keeping the same layout and content</li>
+    </ul>
+    <h2>How I built this and what I used</h2>
+    <p>This website is built with vanilla JS, HTML, and SCSS. I'm using local storage to save the layout user creates. Local storage is updated
+       after every removal, addition, edition, or completion status change of any element.
+       I'm using Google Fonts' Open Serif as the page font, Font Awesome for icons, colorhunt.co for the color palette.</p>
+
+    <h3>Enjoy Using the site! I suggest clicking all the buttons and refreshing your page multiple times. It really works!<h3>
+
+    <!-- <div class="close-button flexbox-container">
+      <i class="fa-solid fa-xmark close-button__icon"></i>
+    </div> -->
+  </div>
+
+  <div class="grid-container | app-wrapper">
+    <div class="form-section | flexbox-container grid-10-col">
+      <form class="form-section__input-form">
+        <input type="text" placeholder="e.g. sleep for 12 hours...">
+      </form>
+      <input type="submit" value="Add">
+    </div>
+
+    <div class="to-do-container | flexbox-container grid-10-col">
+
+      <!-- <div class="to-do-item | flexbox-container" draggable="true">
+        <div class=" to-do-item__body | flexbox-container">
+          <i class="fa-regular fa-circle-check"></i>
+          <div class = "todo-item__animation-prop"></div>
+          <p>Item</p>
+        </div>
+        <i class="fa-solid fa-xmark"></i>
+      </div> -->
+
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
