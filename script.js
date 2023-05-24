@@ -48,7 +48,11 @@ ActivateAllDraggableElements(draggable_elements)
 // Adding a To-Do item in 2 ways:
 
 // By clicking the Add Button
-add_button.addEventListener("click", () => AddANewTodoItem(input_form.value, true))
+add_button.addEventListener("click", () => {
+  if(input_form.value != ""){
+    AddANewTodoItem(input_form.value, true)
+  }
+})
 
 // Or by pressing enter while typing
 input_form.addEventListener("keydown", key => {

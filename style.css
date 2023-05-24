@@ -10,6 +10,11 @@ html {
   overflow-x: hidden;
 }
 
+input[type=text],
+textarea {
+  font-size: 16px;
+}
+
 /* Utility Classes */
 .text-wrapper {
   max-width: 1000px;
@@ -129,6 +134,7 @@ button:hover {
   background-color: #8a817c;
   border: 1px solid #f4f3ee;
   text-decoration: none;
+  border-radius: 0;
   margin: 0;
 }
 

@@ -11,6 +11,11 @@ html{
   overflow-x: hidden;
 }
 
+input[type="text"],
+textarea {
+  font-size: 16px;
+}
+
 /* Utility Classes */
 
 .text-wrapper{
@@ -165,7 +170,8 @@ button:hover{
     border: 1px solid $color-main-500;
     
     text-decoration: none;
-    
+
+    border-radius: 0;
     margin: 0;
   }
 }
