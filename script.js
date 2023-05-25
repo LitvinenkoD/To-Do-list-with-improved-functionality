@@ -302,10 +302,8 @@ function ActivateAllDraggableElements(draggable_elements){
 }
 
 function dragstartCallback(e){
-  setTimeout(() => {
-    console.log("drag start");
-    e.target.classList.toggle("to-do-item--status-is-dragged")
-  }, 50);
+  console.log("drag start");
+  e.target.classList.toggle("to-do-item--status-is-dragged")
 }
 
 function dragendCallback(e){
@@ -322,11 +320,14 @@ function dragendCallback(e){
 function touchstartCallback(e){
   console.log(e.target);
   console.log("touch start");
+  setTimeout(() => {
+    if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
+      e.currentTarget.classList.toggle("to-do-item--status-is-dragged")
+    }
+  }, 50);
 
   // If we're not touching the x or the checkbox
-  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
-    e.currentTarget.classList.toggle("to-do-item--status-is-dragged")
-  }
+
 }
 
 function touchendCallback(e){
