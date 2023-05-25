@@ -143,6 +143,7 @@ button:hover {
 .to-do-container {
   flex-direction: column;
   position: relative;
+  touch-action: none;
 }
 .to-do-container .to-do-item {
   width: 100%;
