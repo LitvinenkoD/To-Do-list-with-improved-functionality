@@ -172,7 +172,7 @@ button:hover{
     text-decoration: none;
 
     -webkit-border-radius:0px;
-    // -webkit-appearance:none;
+    -webkit-appearance:none;
     border-radius: 0;
     margin: 0;
   }
@@ -223,7 +223,6 @@ button:hover{
       position: absolute;
       top: 50%;
       right: 0;
-      // background-color: pink;
       transform: translateY(-50%);
       padding: 1rem;
       color: #ffffff;

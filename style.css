@@ -135,6 +135,7 @@ button:hover {
   border: 1px solid #f4f3ee;
   text-decoration: none;
   -webkit-border-radius: 0px;
+  -webkit-appearance: none;
   border-radius: 0;
   margin: 0;
 }
