@@ -212,6 +212,7 @@ dragover_event_container.addEventListener("dragover", (e) => {
 
 dragover_event_container.addEventListener("touchmove", (e) => {
 
+  e.preventDefault()
   // console.log(e.target);
   const element_currently_dragged = document.querySelector(".to-do-item--status-is-dragged")
   const user_mouse_y_position = e.touches[0].pageY
