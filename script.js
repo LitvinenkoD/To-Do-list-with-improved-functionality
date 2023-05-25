@@ -218,7 +218,7 @@ dragover_event_container.addEventListener("touchmove", (e) => {
   draggable_elements.forEach(elem => {
     if(elem.classList.contains("to-do-item--status-is-dragged")){
       console.log("true");
-      e.preventDefault()
+      // e.preventDefault()
     }
   })
 
