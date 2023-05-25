@@ -213,14 +213,14 @@ dragover_event_container.addEventListener("dragover", (e) => {
 dragover_event_container.addEventListener("touchmove", (e) => {
 
 
-  // Prevents scroll when dragging elements.
-  // Might turn this if statement into a general statement for this whole callback function
-  draggable_elements.forEach(elem => {
-    if(elem.classList.contains("to-do-item--status-is-dragged")){
-      console.log("true");
-      // e.preventDefault()
-    }
-  })
+  // // Prevents scroll when dragging elements.
+  // // Might turn this if statement into a general statement for this whole callback function
+  // draggable_elements.forEach(elem => {
+  //   if(elem.classList.contains("to-do-item--status-is-dragged")){
+  //     console.log("true");
+  //     // e.preventDefault()
+  //   }
+  // })
 
   const element_currently_dragged = document.querySelector(".to-do-item--status-is-dragged")
   const user_mouse_y_position = e.touches[0].pageY
@@ -302,8 +302,10 @@ function ActivateAllDraggableElements(draggable_elements){
 }
 
 function dragstartCallback(e){
-  console.log("drag start");
-  e.target.classList.toggle("to-do-item--status-is-dragged")
+  setTimeout(() => {
+    console.log("drag start");
+    e.target.classList.toggle("to-do-item--status-is-dragged")
+  }, 50);
 }
 
 function dragendCallback(e){
@@ -418,6 +420,7 @@ function editTodoItem(e){
   // Remove form if clicked outside form
   document.addEventListener("click", (e) => {
     if(e.target != input_form){
+      // Preventing error message if the form doesn't exist
       try{
         to_do_item.removeChild(input_form)
       }
@@ -425,7 +428,6 @@ function editTodoItem(e){
       catch{}
     }
   })
-
 
   input_form.addEventListener("keydown", key => {
     if (key.key == "Enter"){
