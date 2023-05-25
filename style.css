@@ -172,6 +172,7 @@ button:hover {
   word-break: break-all;
   text-align: center;
   color: #FFF;
+  touch-action: auto;
 }
 .to-do-container .to-do-item .to-do-item__close-button {
   position: absolute;
