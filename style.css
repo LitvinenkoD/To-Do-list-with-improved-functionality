@@ -78,40 +78,25 @@ button:hover {
 
 .welcome-message {
   position: absolute;
-  width: 85vw;
+  width: 80%;
   left: 50%;
   transform: translateX(-50%);
   background-color: #8a817c;
   border: 10px solid #463f3a;
   color: #f4f3ee;
   font-size: 1.2rem;
-  padding: 2.5rem 2rem;
+  padding: 1rem 2rem 1.5rem;
   flex-direction: column;
-  z-index: 100;
+  z-index: 4;
 }
-.welcome-message h2 {
+.welcome-message h2, .welcome-message h3 {
   font-weight: 600;
   margin-bottom: 0.5rem;
-}
-.welcome-message h3 {
-  font-weight: 600;
   text-align: center;
 }
 .welcome-message p, .welcome-message ul {
   margin-bottom: 1.5rem;
 }
-.welcome-message .close-button {
-  position: absolute;
-  width: 3rem;
-  aspect-ratio: 1;
-  border-radius: 100%;
-  border: 1px solid #f4f3ee;
-  background-color: #463f3a;
-}
-.welcome-message .close-button .close-button__icon {
-  color: #f4f3ee;
-}
-
 .welcome-message--display-hidden {
   display: none;
 }

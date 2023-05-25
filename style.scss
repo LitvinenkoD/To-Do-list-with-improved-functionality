@@ -95,7 +95,7 @@ button:hover{
 
 .welcome-message{
   position: absolute;
-  width: 85vw;
+  width: 80%;
 
   left: 50%;
   transform: translateX(-50%);
@@ -105,19 +105,15 @@ button:hover{
   color: $color-main-500;
   font-size: 1.2rem;
 
-  padding: 2.5rem 2rem;
+  padding: 1rem 2rem 1.5rem;
 
   flex-direction: column;
   
-  z-index: 100;
+  z-index: 4;
 
-  h2{
+  h2, h3{
     font-weight: 600;
     margin-bottom: .5rem;
-  }
-
-  h3{
-    font-weight: 600;
     text-align: center;
   }
 
@@ -125,19 +121,8 @@ button:hover{
     margin-bottom: 1.5rem;
   }
 
-  .close-button{
-    position: absolute;
-
-    width: 3rem;
-    // padding: 1rem;
-    aspect-ratio: 1;
-    border-radius: 100%;
-    border: 1px solid $color-main-500;
-    background-color: $color-main-400;
-    
-    .close-button__icon{
-      color: $color-main-500
-    }
+  ul{
+    // list-style-position: inside;
   }
 }
 
