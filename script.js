@@ -21,12 +21,14 @@ welcome_button.addEventListener("click", (e) => {
 window.addEventListener("load", () => {
   input_form.focus()
 
-  // Loading all elements stored in local storage
-  const local_storage_array = JSON.parse(localStorage.getItem("draggable_elements"))
-  console.log(local_storage_array)
-  for (let i = 0; i < local_storage_array.length; i++) {
-    const element = local_storage_array[i]
-    AddANewTodoItem(element.text_content, false, element.complete_status)
+  if (localStorage != null){
+      // Loading all elements stored in local storage
+    const local_storage_array = JSON.parse(localStorage.getItem("draggable_elements"))
+    console.log(local_storage_array)
+    for (let i = 0; i < local_storage_array.length; i++) {
+      const element = local_storage_array[i]
+      AddANewTodoItem(element.text_content, false, element.complete_status)
+    }
   }
 
 })
@@ -160,7 +162,6 @@ function removeTodoItem(elem){
     // Preventing conflict with other animations on this element type
     if (e.animationName == "todo-item-deletion-desktop" || 
     e.animationName == "todo-item-deletion-mobile"){
-      console.log("here");
       this_to_do_item_parent.removeChild(this_to_do_item)
 
 
@@ -209,6 +210,26 @@ dragover_event_container.addEventListener("dragover", (e) => {
   }
 })
 
+dragover_event_container.addEventListener("touchmove", (e) => {
+
+  // console.log(e.target);
+  const element_currently_dragged = document.querySelector(".to-do-item--status-is-dragged")
+  const user_mouse_y_position = e.touches[0].pageY
+  // this selector selects all elements that are supposed to be a part of this dynamic environment
+  // (other draggables) except for the element that is being dragged at the moment.
+  const rest_of_interactive_elements = [...document.querySelectorAll(".to-do-item:not(.to-do-item--status-is-dragged)")]
+  
+
+  const bottom_neighbor_element = determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y_position)
+
+  if (bottom_neighbor_element != null){
+    draggable_elements_container.insertBefore(element_currently_dragged, bottom_neighbor_element)
+  }
+  else{
+    draggable_elements_container.appendChild(element_currently_dragged)
+  }
+})
+
 function determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y_position){
   // Purpose:
   // The purpose of this function is to identify which element is the nearest neibhoring
@@ -230,7 +251,7 @@ function determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y
     const element_block_height = c.getBoundingClientRect().height
 
     // This is the reference point we compare user mouse y position to
-    const element_block_center_y_position = element_block_y_position + element_block_height/2
+    const element_block_center_y_position = element_block_y_position + element_block_height / 2
 
     // We're hunting for the smallest offset. 
     const offset = element_block_center_y_position - user_mouse_y_position
@@ -259,6 +280,11 @@ function determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y
 function ActivateAllDraggableElements(draggable_elements){
   draggable_elements.forEach(elem => elem.addEventListener("dragstart", dragstartCallback))
   draggable_elements.forEach(elem => elem.addEventListener("dragend", dragendCallback))
+
+  draggable_elements.forEach(elem => elem.addEventListener("touchstart", touchstartCallback))
+  draggable_elements.forEach(elem => elem.addEventListener("touchend", touchendCallback))
+  draggable_elements.forEach(elem => elem.addEventListener("touchcancel", touchendCallback))
+
   draggable_elements.forEach(elem => {
     // Adding a double click event on all paragraph elements
     const item_p_element = elem.childNodes[0].childNodes[2]
@@ -280,6 +306,33 @@ function dragendCallback(e){
 
   // Updating local storage
   updateLocalStorage()
+}
+
+function touchstartCallback(e){
+  console.log(e.target);
+  console.log("touch start");
+
+  // If we're not touching the x or the checkbox
+  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
+    e.currentTarget.classList.toggle("to-do-item--status-is-dragged")
+  }
+}
+
+function touchendCallback(e){
+  console.log("touch end");
+
+
+
+  // If we're not touching the x or the checkbox
+  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
+    e.currentTarget.classList.toggle("to-do-item--status-is-dragged")
+
+    // Updating the draggable_elements
+    draggable_elements = document.querySelectorAll(".to-do-item")
+  
+    // Updating local storage
+    updateLocalStorage()
+  }
 }
 
 
