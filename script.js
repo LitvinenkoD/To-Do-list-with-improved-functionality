@@ -317,27 +317,45 @@ function dragendCallback(e){
   updateLocalStorage()
 }
 
+// Making this variable default at website launch
+let last_tap_time
+let long_touch_timer
+
 function touchstartCallback(e){
-  console.log(e.target);
-  console.log("touch start");
-  setTimeout(() => {
-    if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
-      e.currentTarget.classList.toggle("to-do-item--status-is-dragged")
-    }
-  }, 50);
-
   // If we're not touching the x or the checkbox
+  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
+    const this_to_do_element = e.currentTarget
+    
+    long_touch_timer = setTimeout( () => {
+      console.log("touch drag start")
+      this_to_do_element.classList.toggle("to-do-item--status-is-dragged")
+    },300)
 
+  }
+
+  const this_tap_time = new Date().getTime()
+  const time_since_last_tap = this_tap_time - last_tap_time
+
+
+  if (time_since_last_tap < 400 && time_since_last_tap > 0){
+    console.log("dobuletap");
+    if (e.target.nodeName == "P"){
+      editTodoItem(e)
+    }
+  }
+
+  last_tap_time = this_tap_time
 }
 
 function touchendCallback(e){
-  console.log("touch end");
-
-
+  console.log("touch drag end");
+  clearTimeout(long_touch_timer)
 
   // If we're not touching the x or the checkbox
   if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
-    e.currentTarget.classList.toggle("to-do-item--status-is-dragged")
+    e.currentTarget.classList.remove("to-do-item--status-is-dragged")
+
+    // ========================== ^
 
     // Updating the draggable_elements
     draggable_elements = document.querySelectorAll(".to-do-item")
@@ -398,6 +416,7 @@ function toggleTodoItemCompletionStatus(elem){
 // This function allows to edit an item on doubleclick
 function editTodoItem(e){
 
+  // console.log(());
   const paragraph_element = e.target
   const to_do_item = paragraph_element.parentElement.parentElement
 
