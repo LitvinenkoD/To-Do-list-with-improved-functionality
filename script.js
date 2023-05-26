@@ -1,28 +1,54 @@
+// Hi! This is a pretty heavy file and so I divided the code into groups by type.
 
-// Creating the constants of the input form and submit button
+// Anywhere there is a big space gap, it means that you are entering a 
+// different group of logic. It is easy to understand where you are 
+// Because there are comments everywhere.
 
-const input_form = document.querySelector("input[type = text]")
-const add_button = document.querySelector("input[type = submit]")
+// Broadly speaking, there are 3 main parts of the program
+// 1 - Short Misc section
+// 2 - Item addition, removal, edition and similar things
+// 3 - Item dragging
 
+// There are certain subdivisions made for ease of read, but
+// I don't see sense in giving everything a name because it's 
+// easy to understand what is what using the comments all over
+// the code
+
+
+
+
+// Simple miscellaneous logic
+
+// Introductory button
 const welcome_button = document.querySelector("#welcome")
 const welcome_message = document.querySelector(".welcome-message")
 
-// document.documentElement.addEventListener("click", (e) => {
-//   if(!welcome_message.classList.contains("welcome-message--display-hidden") && e.target.id != "welcome"){
-//     welcome_message.classList.toggle("welcome-message--display-hidden")
-//   }
-// })
-
-welcome_button.addEventListener("click", (e) => {
+// Turns instruction message on and off onlick
+welcome_button.addEventListener("click", () => {
   welcome_message.classList.toggle("welcome-message--display-hidden")
 })
 
-// Making the input form be in focus on startup
+document.addEventListener("click", () =>{
+  if(!welcome_message.classList.contains("welcome-message--display-hidden") && e.target.id != "welcome"){
+    welcome_message.classList.toggle("welcome-message--display-hidden")
+  }
+})
+
+
+// Creating the constants of the input form and submit button
+const input_form = document.querySelector("input[type = text]")
+const add_button = document.querySelector("input[type = submit]")
+
+
+// Site load routine
 window.addEventListener("load", () => {
+
+  // Focusing on the input form on startup
   input_form.focus()
 
+
+  // Loading all elements stored in local storage
   if (localStorage != null){
-      // Loading all elements stored in local storage
     const local_storage_array = JSON.parse(localStorage.getItem("draggable_elements"))
     console.log(local_storage_array)
     for (let i = 0; i < local_storage_array.length; i++) {
@@ -30,33 +56,40 @@ window.addEventListener("load", () => {
       AddANewTodoItem(element.text_content, false, element.complete_status)
     }
   }
-
 })
-
 
 // Creating a constant for the to-do container
 const to_do_container = document.querySelector(".to-do-container")
 
 // This variable contains all draggable elements and it is being
 // updated anytime we add, remove, move or mark elements complete.
-// 
-// Values stored in this array also get constantly uploaded to local
-// storage to enable save functionality
+// A "copy" of this array also goes to local storage every time it's updated.
 let draggable_elements = document.querySelectorAll(".to-do-item")
-ActivateAllDraggableElements(draggable_elements)
+ActivateAllDraggableElements()
 
 
 
-// Adding a To-Do item in 2 ways:
 
-// By clicking the Add Button
+
+
+
+
+
+
+
+
+
+
+
+
+// Item addition method 1 (Mouseclick on "Add")
 add_button.addEventListener("click", () => {
   if(input_form.value != ""){
     AddANewTodoItem(input_form.value, true)
   }
 })
 
-// Or by pressing enter while typing
+// Item addition method 2 (Keydown Enter)
 input_form.addEventListener("keydown", key => {
   if (key.key == "Enter"){
     key.preventDefault()
@@ -67,29 +100,31 @@ input_form.addEventListener("keydown", key => {
 })
 
 
-// Some document event listeners
 
-document.addEventListener("click", (elem) => {
+// Document event listeners for removal, completion, and edition
+document.addEventListener("click", (e) => {
 
   // Removing an item
-  if (elem.target.classList.contains("to-do-item__close-button")){
-    removeTodoItem(elem)
+  if (e.target.classList.contains("to-do-item__close-button")){
+    removeTodoItem(e)
   }
 
   // Marking an item as complete
-  if (elem.target.classList.contains("fa-circle-check")){
-    toggleTodoItemCompletionStatus(elem)
-  }
-
-  // Conviniently closing the welcome message
-  if(!welcome_message.classList.contains("welcome-message--display-hidden") && elem.target.id != "welcome"){
-    welcome_message.classList.toggle("welcome-message--display-hidden")
+  if (e.target.classList.contains("fa-circle-check")){
+    toggleItemCompletion(e)
   }
 })
 
+// Item edition
+document.addEventListener("dblclick", editTodoItem)
 
 
-// Creates a new ToDo item and appends it to the container
+
+
+
+
+// Functions for the above event listeners
+
 function AddANewTodoItem(text_content, added_dynamically, complete = false){
   // Creating the parts of the to-do list item
   const to_do_item = document.createElement('div')
@@ -125,7 +160,7 @@ function AddANewTodoItem(text_content, added_dynamically, complete = false){
 
   // Updating the draggable_elements variable
   draggable_elements = document.querySelectorAll(".to-do-item")
-  ActivateAllDraggableElements(draggable_elements)
+  ActivateAllDraggableElements()
 
   if (added_dynamically){
     // Updating local storage
@@ -140,6 +175,9 @@ function AddANewTodoItem(text_content, added_dynamically, complete = false){
     })
   }
 }
+
+
+
 
 function removeTodoItem(elem){
   // Setting up some constants
@@ -167,7 +205,7 @@ function removeTodoItem(elem){
 
       // Updating the draggable_elements variable
       draggable_elements = document.querySelectorAll(".to-do-item")
-      ActivateAllDraggableElements(draggable_elements)
+      ActivateAllDraggableElements()
 
       // Updating local storage
       updateLocalStorage()
@@ -178,58 +216,259 @@ function removeTodoItem(elem){
 
 
 
-// Elements drag functionality
+function toggleItemCompletion(elem){
 
+  const todo_item = elem.target.parentElement
+  const todo_item__animation_prop = elem.target.nextElementSibling
+
+  if(todo_item.classList.contains("todo-item--status-completed")){
+    // Remove completion, play rewind
+    todo_item.classList.remove("todo-item--status-completed")
+    todo_item__animation_prop.classList.remove("todo-item__animation-prop-status-completed")
+
+    todo_item.classList.add("todo-item--status-completed-rewind")
+    todo_item__animation_prop.classList.add("todo-item__animation-prop-status-completed-rewind")
+
+    todo_item.addEventListener("animationend", (e) => {
+      // Removing them here because they're not supposed to stay
+      if (e.animationName == "todo-item-completed-item-element-rewind")
+        todo_item.classList.remove("todo-item--status-completed-rewind")
+        todo_item__animation_prop.classList.remove("todo-item__animation-prop-status-completed-rewind")
+    })
+  }
+
+  else{
+    // Remove rewind, play completion
+    todo_item.classList.add("todo-item--status-completed")
+    todo_item__animation_prop.classList.add("todo-item__animation-prop-status-completed")
+  }
+
+  // Updating local storage
+  updateLocalStorage()
+}
+
+
+
+
+
+// Item edition
+function editTodoItem(e){
+
+  const paragraph_element = e.target
+  const to_do_item = paragraph_element.parentElement.parentElement
+
+  const paragraph_height = paragraph_element.clientHeight
+  const paragraph_width = paragraph_element.clientWidth
+
+  const to_do_item_width = to_do_item.clientWidth
+  const form_width = Math.max(.7 * to_do_item_width, paragraph_width)
+
+  const input_form = document.createElement("textarea")
+  input_form.className = "todo-item__edit-input-form"
+  input_form.setAttribute("spellcheck", "false")
+
+  input_form.style.width = form_width.toString() + "px"
+  input_form.style.height = paragraph_height.toString() + "px"
+
+  to_do_item.appendChild(input_form)
+
+  input_form.focus()
+
+
+  // Remove form if clicked outside form
+  document.addEventListener("click", (e) => {
+    if(e.target != input_form){
+      // Preventing error message if the form doesn't exist
+      try{
+        to_do_item.removeChild(input_form)
+      }
+
+      catch{}
+    }
+  })
+
+
+  input_form.addEventListener("keydown", key => {
+    if (key.key == "Enter"){
+      key.preventDefault()
+      if (input_form.value != ""){
+        paragraph_element.innerText = input_form.value
+        to_do_item.removeChild(input_form)
+        updateLocalStorage()
+      }
+    }
+  })
+}
+
+
+
+
+// Local storage control
+
+function updateLocalStorage(){
+  // Creating a temporary array that we will populate and then save in local storage
+  const local_storage_temp = []
+  draggable_elements.forEach(e => {
+    const element_inner_text = e.childNodes[0].childNodes[2].innerText
+    const element_complete_status = e.childNodes[0].classList.contains("todo-item--status-completed");
+
+    local_storage_temp.push({"text_content": element_inner_text, "complete_status": element_complete_status})
+  });
+
+  // Saving the array in local storage. Anytime the DOM changes, this array gets overriden
+  localStorage.setItem("draggable_elements", JSON.stringify(local_storage_temp))
+
+  console.log(JSON.parse(localStorage.getItem("draggable_elements")))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Elements drag logic. Part l: Event listeners
+
+
+// Using named functions here because event listeners 
+// stack with anonymous functions, but they don't
+// with named ones.
+
+function ActivateAllDraggableElements(){
+  draggable_elements.forEach(elem => elem.addEventListener("dragstart", dragstartCallback))
+  draggable_elements.forEach(elem => elem.addEventListener("dragend", dragendCallback))
+
+  draggable_elements.forEach(elem => elem.addEventListener("touchstart", touchstartCallback))
+  draggable_elements.forEach(elem => elem.addEventListener("touchend", touchendCallback))
+  draggable_elements.forEach(elem => elem.addEventListener("touchcancel", touchendCallback))
+}
+
+
+function dragstartCallback(e){
+  console.log("drag start");
+  e.target.classList.toggle("to-do-item--status-is-dragged")
+}
+
+
+function dragendCallback(e){
+  console.log("drag end");
+  e.target.classList.toggle("to-do-item--status-is-dragged")
+
+  // Updating the draggable_elements
+  draggable_elements = document.querySelectorAll(".to-do-item")
+
+  // Updating local storage
+  updateLocalStorage()
+}
+
+
+
+
+// Making this variable default at website launch
+let last_tap_time
+let long_touch_timer
+
+function touchstartCallback(e){
+  // If we're not touching the x or the checkbox
+  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
+    const this_to_do_element = e.currentTarget
+    
+    long_touch_timer = setTimeout( () => {
+      console.log("touch drag start")
+      this_to_do_element.classList.toggle("to-do-item--status-is-dragged")
+    },300)
+
+  }
+
+  const this_tap_time = new Date().getTime()
+  const time_since_last_tap = this_tap_time - last_tap_time
+
+
+  if (time_since_last_tap < 400 && time_since_last_tap > 0){
+    console.log("dobuletap");
+    if (e.target.nodeName == "P"){
+      editTodoItem(e)
+    }
+  }
+
+  last_tap_time = this_tap_time
+}
+
+
+
+function touchendCallback(e){
+  console.log("touch drag end");
+  clearTimeout(long_touch_timer)
+
+  // If we're not touching the x or the checkbox
+  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
+    e.currentTarget.classList.remove("to-do-item--status-is-dragged")
+
+    // ========================== ^
+
+    // Updating the draggable_elements
+    draggable_elements = document.querySelectorAll(".to-do-item")
+  
+    // Updating local storage
+    updateLocalStorage()
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Elements drag logic. Part ll: Actual drag logic
+
+// Space, inside which elements can be moved
 const draggable_elements_container = document.querySelector(".to-do-container")
-// the element I want dragover event to fire over. (More than the actual)
-// Interactive area. It's made on purpose to allow user to drag more freely.
-// It doesn't change behavior for this particular website, but might play a role
-// In another environment. You can always minimize this area to just the container
-// area and make the functionality more self-continaed.
-// For my use case it's completely ok to make the area large and I will
-// do that.
+
+// Space, over which you can drag the element stopping the event.
+// It's intentionally made large for convenience
 const dragover_event_container = document.body
 
 
 dragover_event_container.addEventListener("dragover", (e) => {
   e.preventDefault()
-  const element_currently_dragged = document.querySelector(".to-do-item--status-is-dragged")
-  const user_mouse_y_position = e.clientY;
-  // this selector selects all elements that are supposed to be a part of this dynamic environment
-  // (other draggables) except for the element that is being dragged at the moment.
-  const rest_of_interactive_elements = [...document.querySelectorAll(".to-do-item:not(.to-do-item--status-is-dragged)")]
-  
-
-  const bottom_neighbor_element = determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y_position)
-
-  if (bottom_neighbor_element != null){
-    draggable_elements_container.insertBefore(element_currently_dragged, bottom_neighbor_element)
-  }
-  else{
-    draggable_elements_container.appendChild(element_currently_dragged)
-  }
+  dragElement(e.clientY)
 })
 
+
+// Very similar to dragover
 dragover_event_container.addEventListener("touchmove", (e) => {
+  dragElement(e.touches[0].pageY)
+})
 
 
-  // // Prevents scroll when dragging elements.
-  // // Might turn this if statement into a general statement for this whole callback function
-  // draggable_elements.forEach(elem => {
-  //   if(elem.classList.contains("to-do-item--status-is-dragged")){
-  //     console.log("true");
-  //     // e.preventDefault()
-  //   }
-  // })
+function dragElement(user_cursor_position){
 
   const element_currently_dragged = document.querySelector(".to-do-item--status-is-dragged")
-  const user_mouse_y_position = e.touches[0].pageY
+
   // this selector selects all elements that are supposed to be a part of this dynamic environment
   // (other draggables) except for the element that is being dragged at the moment.
   const rest_of_interactive_elements = [...document.querySelectorAll(".to-do-item:not(.to-do-item--status-is-dragged)")]
   
 
-  const bottom_neighbor_element = determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y_position)
+  const bottom_neighbor_element = determineNearestElementBelow(rest_of_interactive_elements, user_cursor_position)
 
   if (bottom_neighbor_element != null){
     draggable_elements_container.insertBefore(element_currently_dragged, bottom_neighbor_element)
@@ -237,7 +476,7 @@ dragover_event_container.addEventListener("touchmove", (e) => {
   else{
     draggable_elements_container.appendChild(element_currently_dragged)
   }
-})
+}
 
 function determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y_position){
   // Purpose:
@@ -277,186 +516,5 @@ function determineNearestElementBelow(rest_of_interactive_elements, user_mouse_y
      // positive, then this will be the return.
   }, {element: null,  offset: Number.POSITIVE_INFINITY})
 
-
   return nearest_block.element
-}
-
-
-// Using named functions here because event listeners 
-// stack with anonymous functions, but they don't
-// with named ones.
-
-function ActivateAllDraggableElements(draggable_elements){
-  draggable_elements.forEach(elem => elem.addEventListener("dragstart", dragstartCallback))
-  draggable_elements.forEach(elem => elem.addEventListener("dragend", dragendCallback))
-
-  draggable_elements.forEach(elem => elem.addEventListener("touchstart", touchstartCallback))
-  draggable_elements.forEach(elem => elem.addEventListener("touchend", touchendCallback))
-  draggable_elements.forEach(elem => elem.addEventListener("touchcancel", touchendCallback))
-
-  draggable_elements.forEach(elem => {
-    // Adding a double click event on all paragraph elements
-    const item_p_element = elem.childNodes[0].childNodes[2]
-    item_p_element.addEventListener("dblclick", editTodoItem)
-  })
-}
-
-function dragstartCallback(e){
-  console.log("drag start");
-  e.target.classList.toggle("to-do-item--status-is-dragged")
-}
-
-function dragendCallback(e){
-  console.log("drag end");
-  e.target.classList.toggle("to-do-item--status-is-dragged")
-
-  // Updating the draggable_elements
-  draggable_elements = document.querySelectorAll(".to-do-item")
-
-  // Updating local storage
-  updateLocalStorage()
-}
-
-// Making this variable default at website launch
-let last_tap_time
-let long_touch_timer
-
-function touchstartCallback(e){
-  // If we're not touching the x or the checkbox
-  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
-    const this_to_do_element = e.currentTarget
-    
-    long_touch_timer = setTimeout( () => {
-      console.log("touch drag start")
-      this_to_do_element.classList.toggle("to-do-item--status-is-dragged")
-    },300)
-
-  }
-
-  const this_tap_time = new Date().getTime()
-  const time_since_last_tap = this_tap_time - last_tap_time
-
-
-  if (time_since_last_tap < 400 && time_since_last_tap > 0){
-    console.log("dobuletap");
-    if (e.target.nodeName == "P"){
-      editTodoItem(e)
-    }
-  }
-
-  last_tap_time = this_tap_time
-}
-
-function touchendCallback(e){
-  console.log("touch drag end");
-  clearTimeout(long_touch_timer)
-
-  // If we're not touching the x or the checkbox
-  if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
-    e.currentTarget.classList.remove("to-do-item--status-is-dragged")
-
-    // ========================== ^
-
-    // Updating the draggable_elements
-    draggable_elements = document.querySelectorAll(".to-do-item")
-  
-    // Updating local storage
-    updateLocalStorage()
-  }
-}
-
-
-function updateLocalStorage(){
-    // Creating a temporary array that we will populate and then save in local storage
-    const local_storage_temp = []
-    draggable_elements.forEach(e => {
-      const element_inner_text = e.childNodes[0].childNodes[2].innerText
-      const element_complete_status = e.childNodes[0].classList.contains("todo-item--status-completed");
-  
-      local_storage_temp.push({"text_content": element_inner_text, "complete_status": element_complete_status})
-    });
-  
-    // Saving the array in local storage. Anytime the DOM changes, this array gets overriden
-    localStorage.setItem("draggable_elements", JSON.stringify(local_storage_temp))
-
-    console.log(JSON.parse(localStorage.getItem("draggable_elements")))
-
-}
-
-function toggleTodoItemCompletionStatus(elem){
-
-  const todo_item = elem.target.parentElement
-  const todo_item__animation_prop = elem.target.nextElementSibling
-
-  if(todo_item.classList.contains("todo-item--status-completed")){
-    // Remove completion, play rewind
-    todo_item.classList.remove("todo-item--status-completed")
-    todo_item__animation_prop.classList.remove("todo-item__animation-prop-status-completed")
-
-    todo_item.classList.add("todo-item--status-completed-rewind")
-    todo_item__animation_prop.classList.add("todo-item__animation-prop-status-completed-rewind")
-
-    todo_item.addEventListener("animationend", (e) => {
-      // Removing them here because they're not supposed to stay
-      if (e.animationName == "todo-item-completed-item-element-rewind")
-        todo_item.classList.remove("todo-item--status-completed-rewind")
-        todo_item__animation_prop.classList.remove("todo-item__animation-prop-status-completed-rewind")
-    })
-  }
-  else{
-    // Remove rewind, play completion
-    todo_item.classList.add("todo-item--status-completed")
-    todo_item__animation_prop.classList.add("todo-item__animation-prop-status-completed")
-  }
-
-  // Updating local storage
-  updateLocalStorage()
-}
-
-// This function allows to edit an item on doubleclick
-function editTodoItem(e){
-
-  // console.log(());
-  const paragraph_element = e.target
-  const to_do_item = paragraph_element.parentElement.parentElement
-
-  const paragraph_height = paragraph_element.clientHeight
-  const paragraph_width = paragraph_element.clientWidth
-
-  const to_do_item_width = to_do_item.clientWidth
-  const form_width = Math.max(.7 * to_do_item_width, paragraph_width)
-
-  const input_form = document.createElement("textarea")
-  input_form.className = "todo-item__edit-input-form"
-  input_form.setAttribute("spellcheck", "false")
-
-  input_form.style.width = form_width.toString() + "px"
-  input_form.style.height = paragraph_height.toString() + "px"
-
-  to_do_item.appendChild(input_form)
-
-  input_form.focus()
-
-  // Remove form if clicked outside form
-  document.addEventListener("click", (e) => {
-    if(e.target != input_form){
-      // Preventing error message if the form doesn't exist
-      try{
-        to_do_item.removeChild(input_form)
-      }
-
-      catch{}
-    }
-  })
-
-  input_form.addEventListener("keydown", key => {
-    if (key.key == "Enter"){
-      key.preventDefault()
-      if (input_form.value != ""){
-        paragraph_element.innerText = input_form.value
-        to_do_item.removeChild(input_form)
-        updateLocalStorage()
-      }
-    }
-  })
 }

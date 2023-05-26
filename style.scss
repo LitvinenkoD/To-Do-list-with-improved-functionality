@@ -95,7 +95,7 @@ button:hover{
 
 .welcome-message{
   position: absolute;
-  width: 80%;
+  width: 85%;
 
   left: 50%;
   transform: translateX(-50%);
@@ -119,10 +119,6 @@ button:hover{
 
   p, ul{
     margin-bottom: 1.5rem;
-  }
-
-  ul{
-    // list-style-position: inside;
   }
 }
 
@@ -366,9 +362,10 @@ button:hover{
   }
 }
 
-@media screen and (max-width: 50em) {
-  body{
-    // background-color: green;
+@media screen and (max-width: 35em) {
+  .welcome-message{
+    width: 95%;
+    font-size: 1rem;
   }
 }
 

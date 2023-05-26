@@ -78,7 +78,7 @@ button:hover {
 
 .welcome-message {
   position: absolute;
-  width: 80%;
+  width: 85%;
   left: 50%;
   transform: translateX(-50%);
   background-color: #8a817c;
@@ -97,6 +97,7 @@ button:hover {
 .welcome-message p, .welcome-message ul {
   margin-bottom: 1.5rem;
 }
+
 .welcome-message--display-hidden {
   display: none;
 }
@@ -292,6 +293,12 @@ button:hover {
   }
   100% {
     opacity: 1;
+  }
+}
+@media screen and (max-width: 35em) {
+  .welcome-message {
+    width: 95%;
+    font-size: 1rem;
   }
 }
 
