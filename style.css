@@ -169,7 +169,7 @@ button:hover {
 .to-do-container .to-do-item .to-do-item__body p::after {
   content: "";
   width: 100%;
-  height: 150%;
+  height: 200%;
   position: absolute;
   left: 50%;
   top: 50%;

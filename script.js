@@ -305,7 +305,11 @@ function editTodoItem(e){
   
     to_do_item.appendChild(input_form)
   
-    input_form.focus()
+    // Autofocus causes issues on mobile devices because
+    // they use virtual keyboard. 
+    if(window.innerWidth >= 800){
+      input_form.focus()
+    }
   
   
     // Remove form if clicked outside form
