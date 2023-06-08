@@ -200,10 +200,24 @@ button:hover{
       flex-wrap: wrap;
 
       p{
+        position: relative;
         word-break: break-all;
         text-align: center;
         color: #FFF;
         touch-action: auto;
+
+
+      }
+
+      // Increasing clickable area
+      p::after{
+        content: "";
+        width: 100%;
+        height: 150%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
       }
     }
 
