@@ -1,23 +1,41 @@
-// Hi! This is a pretty heavy file and so I divided the code into groups by type.
+
+// Hi! Welcome to the script.js file! This is an improved to do list,
+// if compared to more generic and simple ones, and because of that the
+// logic of this site is a bit more complex than usual. The complexity
+// is rather horizontal though, there is just more you can do with
+// the list rather than it being conceptually complicated.
+
+// I've commented the entire file and added in depth explanation to
+// some important functions like drag function for example.
+
+// The guide below explains how the file is structured.
 
 // Anywhere there is a big space gap, it means that you are entering a 
-// different group of logic. It is easy to understand where you are 
-// Because there are comments everywhere.
+// new group of logic. Big groups are divided in // === === format,
+// while regular comments divide or explain smaller pieces of large
+// code groups.
 
-// Broadly speaking, there are 3 main parts of the program
-// 1 - Short Misc section
-// 2 - Item addition, removal, edition and similar things
-// 3 - Item dragging
+// There are 5 main parts of the code -
+// 2 of them being more generic
+// === Simple miscellaneous logic ===
+// === Site load routine, getting values from local storage ===
+//
+// and other 3 being unique and specific to this site and its task
+// === Item addition, removal, completion and edition ===
+// === Elements drag logic. Part l: Event listeners ===
+// === Elements drag logic. Part ll: Drag logic ===
 
-// There are certain subdivisions made for ease of read, but
-// I don't see sense in giving everything a name because it's 
-// easy to understand what is what using the comments all over
-// the code
+// You can navigate the file by CTRL F'ing the respective code group comment.
+
+
+// Enjoy reading!
 
 
 
 
-// Simple miscellaneous logic
+
+
+// === Simple miscellaneous logic ===
 
 // Introductory button
 const welcome_button = document.querySelector("#welcome")
@@ -33,6 +51,20 @@ document.addEventListener("click", () =>{
     welcome_message.classList.toggle("welcome-message--display-hidden")
   }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+// === Site load routine, getting values from local storage ===
 
 
 // Creating the constants of the input form and submit button
@@ -78,7 +110,7 @@ ActivateAllDraggableElements()
 
 
 
-
+// === Item addition, removal, completion and edition ===
 
 
 
@@ -216,6 +248,7 @@ function removeTodoItem(elem){
 
 
 
+
 function toggleItemCompletion(elem){
 
   const todo_item = elem.target.parentElement
@@ -254,50 +287,52 @@ function toggleItemCompletion(elem){
 // Item edition
 function editTodoItem(e){
 
-  const paragraph_element = e.target
-  const to_do_item = paragraph_element.parentElement.parentElement
-
-  const paragraph_height = paragraph_element.clientHeight
-  const paragraph_width = paragraph_element.clientWidth
-
-  const to_do_item_width = to_do_item.clientWidth
-  const form_width = Math.max(.7 * to_do_item_width, paragraph_width)
-
-  const input_form = document.createElement("textarea")
-  input_form.className = "todo-item__edit-input-form"
-  input_form.setAttribute("spellcheck", "false")
-
-  input_form.style.width = form_width.toString() + "px"
-  input_form.style.height = paragraph_height.toString() + "px"
-
-  to_do_item.appendChild(input_form)
-
-  input_form.focus()
-
-
-  // Remove form if clicked outside form
-  document.addEventListener("click", (e) => {
-    if(e.target != input_form){
-      // Preventing error message if the form doesn't exist
-      try{
-        to_do_item.removeChild(input_form)
+  // console.log(e.target.tagName);
+  if(e.target.tagName == "P"){
+    const paragraph_element = e.target
+    const to_do_item = paragraph_element.parentElement.parentElement
+  
+    const paragraph_height = paragraph_element.clientHeight
+    const paragraph_width = paragraph_element.clientWidth
+  
+    const to_do_item_width = to_do_item.clientWidth
+    const form_width = Math.max(.7 * to_do_item_width, paragraph_width)
+  
+    const input_form = document.createElement("textarea")
+    input_form.className = "todo-item__edit-input-form"
+    input_form.setAttribute("spellcheck", "false")
+  
+    input_form.style.width = form_width.toString() + "px"
+    input_form.style.height = paragraph_height.toString() + "px"
+  
+    to_do_item.appendChild(input_form)
+  
+    input_form.focus()
+  
+  
+    // Remove form if clicked outside form
+    document.addEventListener("click", (e) => {
+      if(e.target != input_form){
+        // Preventing error message if the form doesn't exist
+        try{
+          to_do_item.removeChild(input_form)
+        }
+        catch{}
       }
-
-      catch{}
-    }
-  })
-
-
-  input_form.addEventListener("keydown", key => {
-    if (key.key == "Enter"){
-      key.preventDefault()
-      if (input_form.value != ""){
-        paragraph_element.innerText = input_form.value
-        to_do_item.removeChild(input_form)
-        updateLocalStorage()
+    })
+  
+  
+    input_form.addEventListener("keydown", key => {
+      if (key.key == "Enter"){
+        key.preventDefault()
+        if (input_form.value != ""){
+          paragraph_element.innerText = input_form.value
+          to_do_item.removeChild(input_form)
+          updateLocalStorage()
+        }
       }
-    }
-  })
+    })
+  }
 }
 
 
@@ -338,7 +373,9 @@ function updateLocalStorage(){
 
 
 
-// Elements drag logic. Part l: Event listeners
+
+
+// === Elements drag logic. Part l: Event listeners ===
 
 
 // Using named functions here because event listeners 
@@ -415,8 +452,6 @@ function touchendCallback(e){
   if(!e.target.classList.contains("to-do-item__close-button") && !e.target.classList.contains("fa-circle-check")){
     e.currentTarget.classList.remove("to-do-item--status-is-dragged")
 
-    // ========================== ^
-
     // Updating the draggable_elements
     draggable_elements = document.querySelectorAll(".to-do-item")
   
@@ -437,7 +472,7 @@ function touchendCallback(e){
 
 
 
-//Elements drag logic. Part ll: Actual drag logic
+// === Elements drag logic. Part ll: Drag logic ===
 
 // Space, inside which elements can be moved
 const draggable_elements_container = document.querySelector(".to-do-container")
