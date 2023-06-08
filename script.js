@@ -82,7 +82,6 @@ window.addEventListener("load", () => {
   // Loading all elements stored in local storage
   if (localStorage != null){
     const local_storage_array = JSON.parse(localStorage.getItem("draggable_elements"))
-    console.log(local_storage_array)
     for (let i = 0; i < local_storage_array.length; i++) {
       const element = local_storage_array[i]
       AddANewTodoItem(element.text_content, false, element.complete_status)
@@ -287,7 +286,6 @@ function toggleItemCompletion(elem){
 // Item edition
 function editTodoItem(e){
 
-  // console.log(e.target.tagName);
   if(e.target.tagName == "P"){
     const paragraph_element = e.target
     const to_do_item = paragraph_element.parentElement.parentElement
@@ -352,8 +350,6 @@ function updateLocalStorage(){
 
   // Saving the array in local storage. Anytime the DOM changes, this array gets overriden
   localStorage.setItem("draggable_elements", JSON.stringify(local_storage_temp))
-
-  console.log(JSON.parse(localStorage.getItem("draggable_elements")))
 }
 
 
@@ -393,13 +389,11 @@ function ActivateAllDraggableElements(){
 
 
 function dragstartCallback(e){
-  console.log("drag start");
   e.target.classList.toggle("to-do-item--status-is-dragged")
 }
 
 
 function dragendCallback(e){
-  console.log("drag end");
   e.target.classList.toggle("to-do-item--status-is-dragged")
 
   // Updating the draggable_elements
@@ -422,7 +416,6 @@ function touchstartCallback(e){
     const this_to_do_element = e.currentTarget
     
     long_touch_timer = setTimeout( () => {
-      console.log("touch drag start")
       this_to_do_element.classList.toggle("to-do-item--status-is-dragged")
     },300)
 
@@ -433,7 +426,6 @@ function touchstartCallback(e){
 
 
   if (time_since_last_tap < 400 && time_since_last_tap > 0){
-    console.log("dobuletap");
     if (e.target.nodeName == "P"){
       editTodoItem(e)
     }
@@ -445,7 +437,6 @@ function touchstartCallback(e){
 
 
 function touchendCallback(e){
-  console.log("touch drag end");
   clearTimeout(long_touch_timer)
 
   // If we're not touching the x or the checkbox
